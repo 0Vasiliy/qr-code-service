@@ -1,0 +1,152 @@
+{
+  "home": {
+    "title": "QR Code Service",
+    "subtitle": "Find lost items with QR codes",
+    "description": "A reliable way to return lost items. Create a QR code with your contact information and attach it to valuable items.",
+    "howItWorks": "How it works",
+    "steps": {
+      "1": "Create a QR code with your contact information",
+      "2": "Print and attach to your items",
+      "3": "If someone finds your item, they can contact you"
+    },
+    "createQR": "Create QR Code",
+    "tryFree": "Try for free",
+    "email": "Email",
+    "generateTrial": "Generate trial QR code"
+  },
+  "qrGenerator": {
+    "title": "QR Code Generator",
+    "contactInfo": "Contact Information",
+    "email": "Email",
+    "phone": "Phone",
+    "social": "Social Networks",
+    "design": "QR Code Design",
+    "preview": "Preview",
+    "download": "Download",
+    "enterInfo": "Enter contact information to create a QR code",
+    "formats": {
+      "png": "PNG",
+      "svg": "SVG",
+      "pdf": "PDF"
+    }
+  },
+  "examples": {
+    "title": "QR Code Usage Examples",
+    "description": "Discover how QR codes can be useful in various aspects of life",
+    "bag": {
+      "title": "Bags and Backpacks",
+      "description": "Add a QR code to your bag or backpack so that if lost, the finder can easily contact you"
+    },
+    "keys": {
+      "title": "Keys and Keychains",
+      "description": "Attach a QR code to your keychain to make it easy to return if lost"
+    },
+    "pet": {
+      "title": "Pet Collars",
+      "description": "Place a QR code on your pet's collar with contact information for quick return"
+    },
+    "wallet": {
+      "title": "Wallets and Documents",
+      "description": "Add a QR code to your wallet or important documents for quick return if lost"
+    },
+    "luggage": {
+      "title": "Luggage and Suitcases",
+      "description": "Attach a QR code to your luggage to simplify the identification and return process"
+    },
+    "phone": {
+      "title": "Phones and Gadgets",
+      "description": "Add a QR code to your phone case or other gadget for quick return"
+    },
+    "event": {
+      "title": "Event Tickets",
+      "description": "Use QR codes for electronic tickets to concerts, exhibitions, and other events"
+    },
+    "restaurant": {
+      "title": "Restaurant Menus",
+      "description": "Place a QR code on the table for quick access to the menu and ordering"
+    },
+    "business": {
+      "title": "Business Cards",
+      "description": "Add a QR code to your business card for quick contact information saving"
+    }
+  },
+  "feedback": {
+    "title": "Feedback",
+    "name": "Your Name",
+    "email": "Email",
+    "message": "Message",
+    "submit": "Submit",
+    "sending": "Sending...",
+    "success": "Thank you for your message! We will get back to you soon.",
+    "close": "Close",
+    "errors": {
+      "nameRequired": "Please enter your name",
+      "emailRequired": "Please enter your email",
+      "emailInvalid": "Please enter a valid email",
+      "messageRequired": "Please enter your message",
+      "messageTooShort": "Message must be at least 10 characters long",
+      "submitFailed": "An error occurred while submitting the message. Please try again later."
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "confirmPassword": "Confirm Password",
+    "alreadyHaveAccount": "Already have an account? Login",
+    "noAccount": "Don't have an account? Register",
+    "forgotPassword": "Forgot your password?",
+    "loading": "Loading...",
+    "orContinueWith": "Or continue with",
+    "signInWithGoogle": "Sign in with Google",
+    "signInWithGithub": "Sign in with GitHub",
+    "back": "Back",
+    "errors": {
+      "emailRequired": "Please enter your email",
+      "emailInvalid": "Please enter a valid email",
+      "passwordRequired": "Please enter your password",
+      "passwordMinLength": "Password must be at least 6 characters long",
+      "nameRequired": "Please enter your name",
+      "passwordsDontMatch": "Passwords don't match",
+      "loginFailed": "Invalid email or password",
+      "registerFailed": "An error occurred during registration",
+      "logoutFailed": "An error occurred while signing out"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome",
+    "profile": "Profile",
+    "settings": "Settings",
+    "qrCodes": "My QR Codes",
+    "statistics": "Statistics",
+    "logout": "Sign Out",
+    "emailVerified": "Email verified",
+    "emailNotVerified": "Email not verified",
+    "verifyEmail": "Verify email",
+    "verificationSent": "Verification email sent",
+    "connectedAccounts": "Connected Accounts",
+    "connectGoogle": "Connect Google",
+    "connectGithub": "Connect GitHub",
+    "disconnect": "Disconnect",
+    "connected": "Connected",
+    "notConnected": "Not connected",
+    "accountSettings": {
+      "title": "Account Settings",
+      "changePassword": "Change Password",
+      "deleteAccount": "Delete Account",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "emailNotifications": "Email Notifications",
+      "qrCodeScans": "QR Code Scan Notifications",
+      "securityAlerts": "Security Alerts"
+    }
+  }
+} 

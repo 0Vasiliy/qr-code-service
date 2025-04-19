@@ -1,0 +1,31 @@
+{
+  "name": "qr-code-service",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxtjs/i18n": "^8.0.0",
+    "@nuxtjs/tailwindcss": "^6.8.0",
+    "@pinia/nuxt": "^0.5.1",
+    "axios": "^1.6.2",
+    "jspdf": "^2.5.1",
+    "nuxt": "^3.9.0",
+    "qrcode": "^1.5.3",
+    "qr-code-styling": "^1.9.2",
+    "vue": "^3.3.0",
+    "vue-i18n": "^9.2.2",
+    "vue-router": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@types/qrcode": "^1.5.5",
+    "typescript": "^5.2.0",
+    "unhead": "^1.0.0"
+  }
+}

@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply text-gray-900;
+  }
+}
+
+@layer components {
+  .container {
+    @apply mx-auto px-4;
+    max-width: 100%;
+  }
+
+  @media (min-width: 320px) {
+    .container {
+      max-width: 320px;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      max-width: 1280px;
+    }
+  }
+
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-colors duration-200;
+  }
+  
+  .btn-primary {
+    @apply bg-indigo-600 text-white hover:bg-indigo-700;
+  }
+  
+  .btn-secondary {
+    @apply bg-indigo-100 text-indigo-700 hover:bg-indigo-200;
+  }
+
+  /* Адаптивные классы для мобильных устройств */
+  .mobile-only {
+    @apply block md:hidden;
+  }
+
+  .desktop-only {
+    @apply hidden md:block;
+  }
+
+  /* Адаптивные отступы */
+  .section-padding {
+    @apply py-8 md:py-12 lg:py-16;
+  }
+
+  /* Адаптивные размеры шрифтов */
+  .text-responsive {
+    @apply text-sm md:text-base lg:text-lg;
+  }
+
+  .heading-responsive {
+    @apply text-xl md:text-2xl lg:text-3xl;
+  }
+} 
