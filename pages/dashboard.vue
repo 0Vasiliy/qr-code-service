@@ -1,96 +1,55 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <!-- Кнопка "Назад" -->
-    <button
-      @click="navigateTo('/')"
-      class="fixed top-4 left-4 z-50 inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
-    >
-      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-      </svg>
-      {{ $t('qrGenerator.back') }}
-    </button>
-
-    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <!-- Заголовок -->
-      <div class="px-4 py-6 sm:px-0">
-        <h1 class="text-3xl font-bold text-gray-900">{{ $t('dashboard.title') }}</h1>
-        <p class="mt-1 text-sm text-gray-500">{{ $t('dashboard.welcome') }}, {{ user?.name }}</p>
-      </div>
-
-      <!-- Основной контент -->
-      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <!-- Левая колонка - Профиль -->
-        <div class="lg:col-span-1">
-          <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-medium text-gray-900 mb-4">{{ $t('dashboard.profile') }}</h2>
-            
-            <!-- Статус email -->
-            <div class="mb-4">
-              <p class="text-sm text-gray-500">{{ user?.email }}</p>
-              <div class="mt-2">
-                <span v-if="user?.emailVerified" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  {{ $t('dashboard.emailVerified') }}
-                </span>
-                <div v-else class="flex items-center">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                    {{ $t('dashboard.emailNotVerified') }}
-                  </span>
-                  <button 
-                    @click="sendVerificationEmail"
-                    class="ml-2 text-sm text-teal-600 hover:text-teal-500"
-                  >
-                    {{ $t('dashboard.verifyEmail') }}
-                  </button>
-                </div>
+  <div class="min-h-screen bg-gray-100">
+    <div class="py-10">
+      <header>
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h1 class="text-3xl font-bold leading-tight tracking-tight text-gray-900">{{ $t('dashboard.title') }}</h1>
+        </div>
+      </header>
+      <main>
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div class="px-4 py-8 sm:px-0">
+            <div class="rounded-lg bg-white p-6 shadow">
+              <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.welcome') }}, {{ userEmail }}</h2>
+              <div class="mt-4">
+                <button
+                  @click="handleLogout"
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                >
+                  {{ $t('dashboard.logout') }}
+                </button>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- Правая колонка - QR-коды и статистика -->
-        <div class="lg:col-span-2">
-          <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-medium text-gray-900 mb-4">{{ $t('dashboard.qrCodes') }}</h2>
-            <!-- Здесь будет список QR-кодов пользователя -->
-            <div class="text-center text-gray-500">
-              {{ $t('dashboard.noQRCodes') }}
-            </div>
-          </div>
-
-          <div class="mt-6 bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-medium text-gray-900 mb-4">{{ $t('dashboard.statistics') }}</h2>
-            <!-- Здесь будет статистика -->
-            <div class="text-center text-gray-500">
-              {{ $t('dashboard.noStatistics') }}
-            </div>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useAuthStore } from '~/stores/auth'
+import { useRouter } from 'vue-router'
 
-const authStore = useAuthStore()
-const user = ref(authStore.user)
-
-const sendVerificationEmail = async () => {
-  try {
-    await authStore.sendVerificationEmail()
-    // Показать уведомление об успешной отправке
-  } catch (error) {
-    console.error('Error sending verification email:', error)
-  }
-}
+const router = useRouter()
+const userEmail = ref('')
 
 onMounted(() => {
-  // Проверить, авторизован ли пользователь
-  if (!authStore.isAuthenticated) {
-    navigateTo('/auth/login')
+  // Проверяем авторизацию
+  const isAuthenticated = localStorage.getItem('isAuthenticated')
+  const email = localStorage.getItem('userEmail')
+  
+  if (!isAuthenticated || !email) {
+    router.push('/auth')
+    return
   }
+  
+  userEmail.value = email
 })
+
+const handleLogout = () => {
+  localStorage.removeItem('isAuthenticated')
+  localStorage.removeItem('userEmail')
+  router.push('/')
+}
 </script> 
