@@ -2,7 +2,6 @@ import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  base: '/qr-code-service/',
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
@@ -20,7 +19,7 @@ export default defineNuxtConfig({
   },
 
   i18n: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: 'https://0vasiliy.github.io/qr-code-service/',
     locales: [
       {
         code: 'ru',
@@ -46,15 +45,19 @@ export default defineNuxtConfig({
   },
 
   app: {
+    ssr: false,
+    // baseURL: '/qr-code-service/',
+    buildAssetsDir: '/_nuxt/',
     head: {
       title: 'QR Code Service - Поиск утерянных вещей',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Сервис для создания и управления QR-кодами для поиска утерянных вещей' }
+        { name: 'description', content: 'Сервис для создания и управления QR-кодами для поиска утерянных вещей' },
+        { 'http-equiv': 'Content-Security-Policy', content: "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:;" }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: '/qr-code-service/favicon.ico' }
       ]
     }
   },
