@@ -100,9 +100,6 @@
     "noAccount": "Don't have an account? Register",
     "forgotPassword": "Forgot your password?",
     "loading": "Loading...",
-    "orContinueWith": "Or continue with",
-    "signInWithGoogle": "Sign in with Google",
-    "signInWithGithub": "Sign in with GitHub",
     "back": "Back",
     "errors": {
       "emailRequired": "Please enter your email",
@@ -128,12 +125,6 @@
     "emailNotVerified": "Email not verified",
     "verifyEmail": "Verify email",
     "verificationSent": "Verification email sent",
-    "connectedAccounts": "Connected Accounts",
-    "connectGoogle": "Connect Google",
-    "connectGithub": "Connect GitHub",
-    "disconnect": "Disconnect",
-    "connected": "Connected",
-    "notConnected": "Not connected",
     "accountSettings": {
       "title": "Account Settings",
       "changePassword": "Change Password",

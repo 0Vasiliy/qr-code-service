@@ -101,9 +101,6 @@
     "noAccount": "Нет аккаунта?",
     "forgotPassword": "Забыли пароль?",
     "loading": "Загрузка...",
-    "orContinueWith": "Или продолжить через",
-    "signInWithGoogle": "Войти через Google",
-    "signInWithGithub": "Войти через GitHub",
     "back": "Назад",
     "errors": {
       "emailRequired": "Пожалуйста, введите email",
@@ -129,12 +126,6 @@
     "emailNotVerified": "Email не подтвержден",
     "verifyEmail": "Подтвердить email",
     "verificationSent": "Письмо с подтверждением отправлено",
-    "connectedAccounts": "Подключенные аккаунты",
-    "connectGoogle": "Подключить Google",
-    "connectGithub": "Подключить GitHub",
-    "disconnect": "Отключить",
-    "connected": "Подключен",
-    "notConnected": "Не подключен",
     "accountSettings": {
       "title": "Настройки аккаунта",
       "changePassword": "Изменить пароль",

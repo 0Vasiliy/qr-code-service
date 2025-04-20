@@ -6,9 +6,7 @@ const TEST_USER = {
   name: 'Test User',
   email: 'test@example.com',
   password: 'test123',
-  emailVerified: true,
-  googleConnected: false,
-  githubConnected: false
+  emailVerified: true
 }
 
 export default defineEventHandler(async (event) => {
@@ -24,9 +22,7 @@ export default defineEventHandler(async (event) => {
           id: TEST_USER.id,
           name: TEST_USER.name,
           email: TEST_USER.email,
-          emailVerified: TEST_USER.emailVerified,
-          googleConnected: TEST_USER.googleConnected,
-          githubConnected: TEST_USER.githubConnected
+          emailVerified: TEST_USER.emailVerified
         }
       }
     }

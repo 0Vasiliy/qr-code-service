@@ -12,8 +12,6 @@ interface User {
   name: string
   email: string
   emailVerified: boolean
-  googleConnected: boolean
-  githubConnected: boolean
 }
 
 export const useAuthStore = defineStore('auth', () => {
@@ -60,12 +58,12 @@ export const useAuthStore = defineStore('auth', () => {
 
   /**
    * Метод регистрации пользователя
+   * @param name - Имя пользователя
    * @param email - Email пользователя
    * @param password - Пароль пользователя
-   * @param name - Имя пользователя
    * @returns Объект пользователя при успешной регистрации
    */
-  const register = async (email: string, password: string, name: string) => {
+  const register = async (name: string, email: string, password: string) => {
     loading.value = true
     error.value = null
     try {
@@ -74,7 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, password, name })
+        body: JSON.stringify({ name, email, password })
       })
 
       const data = await response.json()
@@ -136,174 +134,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  /**
-   * Метод подключения аккаунта Google
-   */
-  const connectGoogle = async () => {
-    try {
-      const response = await fetch('/api/auth/google/connect', {
-        method: 'POST'
-      })
-
-      const data = await response.json()
-      if (data.success) {
-        if (user.value) {
-          user.value = {
-            ...user.value,
-            googleConnected: true
-          }
-        }
-      } else {
-        throw new Error(data.error)
-      }
-    } catch (error) {
-      console.error('Google connection error:', error)
-      throw error
-    }
-  }
-
-  /**
-   * Метод отключения аккаунта Google
-   */
-  const disconnectGoogle = async () => {
-    try {
-      const response = await fetch('/api/auth/google/disconnect', {
-        method: 'POST'
-      })
-
-      const data = await response.json()
-      if (data.success) {
-        if (user.value) {
-          user.value = {
-            ...user.value,
-            googleConnected: false
-          }
-        }
-      } else {
-        throw new Error(data.error)
-      }
-    } catch (error) {
-      console.error('Google disconnection error:', error)
-      throw error
-    }
-  }
-
-  /**
-   * Метод подключения аккаунта GitHub
-   */
-  const connectGithub = async () => {
-    try {
-      const response = await fetch('/api/auth/github/connect', {
-        method: 'POST'
-      })
-
-      const data = await response.json()
-      if (data.success) {
-        if (user.value) {
-          user.value = {
-            ...user.value,
-            githubConnected: true
-          }
-        }
-      } else {
-        throw new Error(data.error)
-      }
-    } catch (error) {
-      console.error('GitHub connection error:', error)
-      throw error
-    }
-  }
-
-  /**
-   * Метод отключения аккаунта GitHub
-   */
-  const disconnectGithub = async () => {
-    try {
-      const response = await fetch('/api/auth/github/disconnect', {
-        method: 'POST'
-      })
-
-      const data = await response.json()
-      if (data.success) {
-        if (user.value) {
-          user.value = {
-            ...user.value,
-            githubConnected: false
-          }
-        }
-      } else {
-        throw new Error(data.error)
-      }
-    } catch (error) {
-      console.error('GitHub disconnection error:', error)
-      throw error
-    }
-  }
-
-  /**
-   * Метод входа через Google
-   * @returns Объект пользователя при успешном входе
-   */
-  const loginWithGoogle = async () => {
-    loading.value = true
-    error.value = null
-    try {
-      const response = await fetch('/api/auth/google/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-
-      const data = await response.json()
-
-      if (!data.success) {
-        throw new Error(data.error || 'Google login failed')
-      }
-
-      user.value = data.user
-      isAuthenticated.value = true
-      return data.user
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Google login failed'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * Метод входа через GitHub
-   * @returns Объект пользователя при успешном входе
-   */
-  const loginWithGithub = async () => {
-    loading.value = true
-    error.value = null
-    try {
-      const response = await fetch('/api/auth/github/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-
-      const data = await response.json()
-
-      if (!data.success) {
-        throw new Error(data.error || 'GitHub login failed')
-      }
-
-      user.value = data.user
-      isAuthenticated.value = true
-      return data.user
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'GitHub login failed'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
   return {
     user,
     isAuthenticated,
@@ -312,12 +142,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     register,
     logout,
-    sendVerificationEmail,
-    connectGoogle,
-    disconnectGoogle,
-    connectGithub,
-    disconnectGithub,
-    loginWithGoogle,
-    loginWithGithub
+    sendVerificationEmail
   }
 }) 

@@ -15,11 +15,15 @@ export default defineNuxtConfig({
       publicDir: '.output/public'
     },
     devProxy: {},
-    devStorage: {}
+    devStorage: {},
+    preset: 'github-pages',
+    prerender: {
+      routes: ['/']
+    }
   },
 
   i18n: {
-    baseUrl: 'https://0vasiliy.github.io/qr-code-service/',
+    baseURL: '/qr-code-service/', 
     locales: [
       {
         code: 'ru',
@@ -45,22 +49,21 @@ export default defineNuxtConfig({
   },
 
   app: {
-    ssr: false,
-    // baseURL: '/qr-code-service/',
+    baseURL: process.env.NODE_ENV === 'production' ? '/qr-code-service/' : '/',
     buildAssetsDir: '/_nuxt/',
     head: {
-      title: 'QR Code Service - Поиск утерянных вещей',
+      title: 'QR Code Service',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Сервис для создания и управления QR-кодами для поиска утерянных вещей' },
-        { 'http-equiv': 'Content-Security-Policy', content: "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:;" }
+        { hid: 'description', name: 'description', content: 'Сервис для создания QR кодов' }
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/qr-code-service/favicon.ico' }
       ]
     }
   },
-
+  // target: 'static',
+  ssr: true,
   compatibilityDate: '2025-04-17'
 })
