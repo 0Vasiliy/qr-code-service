@@ -14,30 +14,28 @@ const TEST_USER = {
 
 export default defineEventHandler(async (event) => {
   try {
+    // Устанавливаем заголовки ответа
     setResponseHeaders(event, {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'"
     })
 
     const method = getMethod(event)
 
+    // Обработка OPTIONS запроса
     if (method === 'OPTIONS') {
       return { success: true }
     }
 
-    if (method === 'GET') {
-      return {
-        success: true,
-        message: 'API is working'
-      }
-    }
-
+    // Проверяем метод запроса
     if (method !== 'POST') {
       return {
         success: false,
-        error: 'Method not allowed'
+        error: 'Method not allowed',
+        statusCode: 405
       }
     }
 
@@ -47,7 +45,8 @@ export default defineEventHandler(async (event) => {
     if (!email || !password) {
       return {
         success: false,
-        error: 'Email and password are required'
+        error: 'Email and password are required',
+        statusCode: 400
       }
     }
 
@@ -70,14 +69,16 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: false,
-      error: 'Invalid email or password'
+      error: 'Invalid email or password',
+      statusCode: 401
     }
   } catch (error) {
     console.error('Login error:', error)
     return {
       success: false,
       error: 'Login failed',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : 'Unknown error',
+      statusCode: 500
     }
   }
 }) 
