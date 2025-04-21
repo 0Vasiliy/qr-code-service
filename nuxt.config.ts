@@ -14,6 +14,9 @@ export default defineNuxtConfig({
       serverDir: '.output/server',
       publicDir: '.output/public'
     },
+    // Для локальной разработки (master branch):
+    // preset: 'node-server',
+    // Для продакшена (gh-pages branch):
     preset: 'github-pages',
     prerender: {
       routes: ['/', '/auth', '/dashboard']
@@ -33,16 +36,18 @@ export default defineNuxtConfig({
         cors: true,
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',
-          'Access-Control-Allow-Credentials': 'true'
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
         }
       }
     }
   },
 
   i18n: {
-    baseUrl: process.env.NODE_ENV === 'production' ? '/qr-code-service/' : '/',
+    // Для локальной разработки (master branch):
+    // baseUrl: '/',
+    // Для продакшена (gh-pages branch):
+    baseUrl: '/qr-code-service/',
     locales: [
       {
         code: 'ru',
@@ -68,6 +73,9 @@ export default defineNuxtConfig({
   },
 
   app: {
+    // Для локальной разработки (master branch):
+    // baseURL: '/',
+    // Для продакшена (gh-pages branch):
     baseURL: '/qr-code-service/',
     buildAssetsDir: '/_nuxt/',
     head: {
@@ -120,5 +128,11 @@ export default defineNuxtConfig({
         }
       }
     }
-  }
+  },
+
+  // Для локальной разработки (master branch):
+  // server: {
+  //   port: 3000,
+  //   host: '0.0.0.0'
+  // }
 })
