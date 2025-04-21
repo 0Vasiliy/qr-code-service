@@ -1,15 +1,11 @@
 import { ref } from 'vue'
 import { useAuthStore } from '../stores/authStore'
 
-// Для локальной разработки (master branch):
-// const baseURL = 'http://localhost:3000/api'
-
-// Для продакшена (gh-pages branch):
-const baseURL = 'https://vladimir-zhukov.github.io/qr-code-service/api'
-
 export const useApi = () => {
-  const loading = ref(false)
-  const error = ref<string | null>(null)
+  const isDev = process.env.NODE_ENV === 'development'
+  const baseURL = isDev 
+    ? 'http://localhost:3000/api'
+    : '/api'
 
   const authStore = useAuthStore()
   const token = ref(authStore.token)
@@ -21,43 +17,75 @@ export const useApi = () => {
   }
 
   const post = async (endpoint: string, data: any) => {
-    loading.value = true
-    error.value = null
-
     try {
-      console.log('Отправка запроса:', { endpoint, data })
+      console.log('Отправка POST запроса:', {
+        url: `${baseURL}${endpoint}`,
+        data: { ...data, password: data.password ? '***' : undefined }
+      })
+
+      // В режиме разработки используем локальное хранилище
+      if (isDev && endpoint === '/auth/login') {
+        if (data.email === 'test@example.com' && data.password === 'test123') {
+          const mockResponse = {
+            success: true,
+            user: {
+              id: '1',
+              name: 'Test User',
+              email: 'test@example.com',
+              emailVerified: true,
+              role: 'user',
+              createdAt: new Date().toISOString(),
+              lastLogin: new Date().toISOString()
+            },
+            token: 'test-token-123'
+          }
+          console.log('Локальный ответ:', mockResponse)
+          return mockResponse
+        } else {
+          throw new Error('Неверный email или пароль')
+        }
+      }
+
       const response = await fetch(`${baseURL}${endpoint}`, {
         method: 'POST',
         headers,
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'include'
       })
 
-      console.log('Получен ответ:', response)
+      console.log('Получен ответ:', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries())
+      })
 
-      // Проверяем тип ответа
-      const contentType = response.headers.get('content-type')
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Неверный формат ответа сервера')
+      let responseData
+      try {
+        const text = await response.text()
+        responseData = text ? JSON.parse(text) : {}
+        console.log('Данные ответа:', responseData)
+      } catch (e) {
+        console.error('Ошибка при парсинге JSON:', e)
+        throw new Error('Ошибка при обработке ответа сервера')
       }
-
-      const responseData = await response.json()
-      console.log('Данные ответа:', responseData)
 
       if (!response.ok) {
-        throw new Error(responseData.message || 'Ошибка сервера')
-      }
-
-      if (responseData.status === 'error') {
-        throw new Error(responseData.message || 'Ошибка при обработке запроса')
+        console.error('Ошибка API:', {
+          status: response.status,
+          data: responseData,
+          url: `${baseURL}${endpoint}`
+        })
+        const errorMessage = responseData?.message || 'Ошибка сервера'
+        throw new Error(errorMessage)
       }
 
       return responseData
-    } catch (err: any) {
-      console.error('Ошибка API:', err)
-      error.value = err.message || 'Ошибка при обработке ответа сервера'
-      throw err
-    } finally {
-      loading.value = false
+    } catch (error) {
+      console.error('Ошибка API:', error)
+      if (error instanceof Error) {
+        throw error
+      }
+      throw new Error('Неизвестная ошибка при выполнении запроса')
     }
   }
 
@@ -123,8 +151,6 @@ export const useApi = () => {
   return {
     post,
     saveQRCode,
-    getQRCodes,
-    loading,
-    error
+    getQRCodes
   }
 } 

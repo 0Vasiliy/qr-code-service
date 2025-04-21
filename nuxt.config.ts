@@ -14,10 +14,7 @@ export default defineNuxtConfig({
       serverDir: '.output/server',
       publicDir: '.output/public'
     },
-    // Для локальной разработки (master branch):
-    // preset: 'node-server',
-    // Для продакшена (gh-pages branch):
-    preset: 'github-pages',
+    preset: process.env.NODE_ENV === 'production' ? 'github-pages' : 'node-server',
     prerender: {
       routes: ['/', '/auth', '/dashboard']
     },
@@ -36,18 +33,16 @@ export default defineNuxtConfig({
         cors: true,
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',
+          'Access-Control-Allow-Credentials': 'true'
         }
       }
     }
   },
 
   i18n: {
-    // Для локальной разработки (master branch):
-    // baseUrl: '/',
-    // Для продакшена (gh-pages branch):
-    baseUrl: '/qr-code-service/',
+    baseUrl: process.env.NODE_ENV === 'production' ? '/qr-code-service/' : '/',
     locales: [
       {
         code: 'ru',
@@ -73,10 +68,7 @@ export default defineNuxtConfig({
   },
 
   app: {
-    // Для локальной разработки (master branch):
-    // baseURL: '/',
-    // Для продакшена (gh-pages branch):
-    baseURL: '/qr-code-service/',
+    baseURL: process.env.NODE_ENV === 'production' ? '/qr-code-service/' : '/',
     buildAssetsDir: '/_nuxt/',
     head: {
       title: 'QR Code Service',
@@ -90,11 +82,11 @@ export default defineNuxtConfig({
         }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/qr-code-service/favicon.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: process.env.NODE_ENV === 'production' ? '/qr-code-service/favicon.ico' : '/favicon.ico' }
       ]
     }
   },
-  target: 'static',
+  // target: 'static',
   ssr: true,
   compatibilityDate: '2025-04-17',
   
@@ -114,7 +106,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase: '/api'
+      apiBase: process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000/api'
+        : '/api'
     }
   },
 
@@ -128,11 +122,5 @@ export default defineNuxtConfig({
         }
       }
     }
-  },
-
-  // Для локальной разработки (master branch):
-  // server: {
-  //   port: 3000,
-  //   host: '0.0.0.0'
-  // }
+  }
 })

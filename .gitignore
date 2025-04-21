@@ -5,6 +5,7 @@
 .nitro
 .cache
 dist
+_nuxt
 
 # Node dependencies
 node_modules
@@ -22,3 +23,9 @@ logs
 .env
 .env.*
 !.env.example
+
+# Generated directories
+.output/public/*
+!.output/public/.gitkeep
+!.output/public/en
+!.output/public/ru

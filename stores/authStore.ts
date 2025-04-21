@@ -1,85 +1,119 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useApi } from '../composables/api'
 
+interface User {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  role: string
+  createdAt: string
+  lastLogin: string
+}
+
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<any>(null)
+  const user = ref<User | null>(null)
   const token = ref<string | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
 
-  const api = useApi()
+  const isAuthenticated = computed(() => !!token.value)
 
-  // Инициализация из localStorage
+  // Инициализация из localStorage при создании store
   const initFromStorage = () => {
     try {
-      const storedUser = localStorage.getItem('user')
-      const storedToken = localStorage.getItem('token')
+      const storedToken = localStorage.getItem('auth_token')
+      const storedUser = localStorage.getItem('auth_user')
+      
+      if (storedToken) {
+        token.value = storedToken
+      }
       
       if (storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser)
-          if (typeof parsedUser === 'object' && parsedUser !== null) {
+          if (parsedUser && typeof parsedUser === 'object') {
             user.value = parsedUser
-          } else {
-            throw new Error('Invalid user data format')
           }
         } catch (e) {
           console.error('Ошибка при парсинге данных пользователя:', e)
-          localStorage.removeItem('user')
+          localStorage.removeItem('auth_user')
         }
-      }
-      
-      if (storedToken) {
-        token.value = storedToken
       }
     } catch (e) {
       console.error('Ошибка при инициализации из localStorage:', e)
     }
   }
 
-  // Вход в систему
+  // Вызываем инициализацию сразу
+  initFromStorage()
+
+  const setToken = (newToken: string | null) => {
+    token.value = newToken
+    if (newToken) {
+      localStorage.setItem('auth_token', newToken)
+    } else {
+      localStorage.removeItem('auth_token')
+    }
+  }
+
+  const setUser = (newUser: User | null) => {
+    user.value = newUser
+    if (newUser) {
+      localStorage.setItem('auth_user', JSON.stringify(newUser))
+    } else {
+      localStorage.removeItem('auth_user')
+    }
+  }
+
+  const clearAuth = () => {
+    setToken(null)
+    setUser(null)
+  }
+
   const login = async (email: string, password: string) => {
     loading.value = true
     error.value = null
-    
     try {
-      console.log('Попытка входа:', { email })
-      const response = await api.post('/auth/login', { email, password })
+      console.log('Попытка входа с данными:', { email })
+      const response = await useApi().post('/auth/login', { email, password })
       console.log('Ответ сервера:', response)
 
-      if (response.status === 'success' && response.data) {
-        user.value = response.data.user
-        token.value = response.data.token
-        
-        // Сохраняем в localStorage
-        localStorage.setItem('user', JSON.stringify(response.data.user))
-        localStorage.setItem('token', response.data.token)
-        
+      if (response && response.success && response.token && response.user) {
+        console.log('Успешная авторизация')
+        setToken(response.token)
+        setUser(response.user)
         return true
       } else {
-        throw new Error(response.message || 'Ошибка при входе')
+        console.error('Неверный формат ответа:', response)
+        throw new Error(response?.message || 'Неверный формат ответа')
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Ошибка при входе:', err)
-      error.value = err.message || 'Ошибка при входе'
-      return false
+      const errorMessage = err instanceof Error ? err.message : 'Ошибка авторизации'
+      error.value = errorMessage
+      throw new Error(errorMessage)
     } finally {
       loading.value = false
     }
   }
 
-  // Выход из системы
-  const logout = () => {
-    user.value = null
-    token.value = null
-    localStorage.removeItem('user')
-    localStorage.removeItem('token')
+  const logout = async () => {
+    loading.value = true
+    try {
+      clearAuth()
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Ошибка при выходе'
+      error.value = errorMessage
+      throw new Error(errorMessage)
+    } finally {
+      loading.value = false
+    }
   }
 
-  // Проверка авторизации
-  const isAuthenticated = () => {
-    return !!token.value
+  const checkAuth = () => {
+    return isAuthenticated.value
   }
 
   return {
@@ -87,9 +121,9 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     loading,
     error,
-    initFromStorage,
+    isAuthenticated,
     login,
     logout,
-    isAuthenticated
+    checkAuth
   }
 }) 
