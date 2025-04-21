@@ -56,8 +56,7 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Сервис для создания QR кодов' },
-        { 'http-equiv': 'Content-Security-Policy', content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https:;" }
+        { hid: 'description', name: 'description', content: 'Сервис для создания QR кодов' }
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/qr-code-service/favicon.ico' }

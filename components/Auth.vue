@@ -90,23 +90,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
 const email = ref('')
 const password = ref('')
 const rememberMe = ref(false)
 
-const handleSubmit = async () => {
-  try {
-    // Сохраняем состояние авторизации в localStorage
-    localStorage.setItem('isAuthenticated', 'true')
-    localStorage.setItem('userEmail', email.value)
-    
-    // Перенаправляем на страницу личного кабинета
-    await router.push('/dashboard')
-  } catch (error) {
-    console.error('Auth error:', error)
-  }
+const handleSubmit = () => {
+  // Здесь будет логика авторизации
+  console.log('Form submitted:', { email: email.value, password: password.value, rememberMe: rememberMe.value })
 }
 </script> 
