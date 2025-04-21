@@ -14,11 +14,18 @@ export default defineNuxtConfig({
       serverDir: '.output/server',
       publicDir: '.output/public'
     },
-    preset: process.env.NODE_ENV === 'production' ? 'github-pages' : 'node-server',
+    preset: 'github-pages',
     prerender: {
       routes: ['/', '/auth', '/dashboard']
     },
-    devProxy: {},
+    devProxy: {
+      '/api': {
+        target: 'http://localhost:3000/api',
+        changeOrigin: true,
+        prependPath: true,
+        ws: true
+      }
+    },
     devStorage: {},
     timing: false,
     routeRules: {
@@ -27,7 +34,8 @@ export default defineNuxtConfig({
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',
+          'Access-Control-Allow-Credentials': 'true'
         }
       }
     }
@@ -60,7 +68,7 @@ export default defineNuxtConfig({
   },
 
   app: {
-    baseURL: process.env.NODE_ENV === 'production' ? '/qr-code-service/' : '/',
+    baseURL: '/qr-code-service/',
     buildAssetsDir: '/_nuxt/',
     head: {
       title: 'QR Code Service',
@@ -74,11 +82,11 @@ export default defineNuxtConfig({
         }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: process.env.NODE_ENV === 'production' ? '/qr-code-service/favicon.ico' : '/favicon.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: '/qr-code-service/favicon.ico' }
       ]
     }
   },
-  // target: 'static',
+  target: 'static',
   ssr: true,
   compatibilityDate: '2025-04-17',
   
@@ -93,6 +101,24 @@ export default defineNuxtConfig({
   router: {
     options: {
       strict: false
+    }
+  },
+
+  runtimeConfig: {
+    public: {
+      apiBase: '/api'
+    }
+  },
+
+  vite: {
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+          ws: true
+        }
+      }
     }
   }
 })

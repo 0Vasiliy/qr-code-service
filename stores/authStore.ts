@@ -1,11 +1,15 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useApi } from '~/composables/api'
+import { useApi } from '../composables/api'
 
 interface User {
   id: string
   name: string
   email: string
+  emailVerified: boolean
+  role: string
+  createdAt: string
+  lastLogin: string
 }
 
 export const useAuthStore = defineStore('auth', () => {
@@ -18,11 +22,27 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Инициализация из localStorage при создании store
   const initFromStorage = () => {
-    const storedToken = localStorage.getItem('auth_token')
-    const storedUser = localStorage.getItem('auth_user')
-    if (storedToken && storedUser) {
-      token.value = storedToken
-      user.value = JSON.parse(storedUser)
+    try {
+      const storedToken = localStorage.getItem('auth_token')
+      const storedUser = localStorage.getItem('auth_user')
+      
+      if (storedToken) {
+        token.value = storedToken
+      }
+      
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser)
+          if (parsedUser && typeof parsedUser === 'object') {
+            user.value = parsedUser
+          }
+        } catch (e) {
+          console.error('Ошибка при парсинге данных пользователя:', e)
+          localStorage.removeItem('auth_user')
+        }
+      }
+    } catch (e) {
+      console.error('Ошибка при инициализации из localStorage:', e)
     }
   }
 
@@ -56,17 +76,24 @@ export const useAuthStore = defineStore('auth', () => {
     loading.value = true
     error.value = null
     try {
+      console.log('Попытка входа с данными:', { email })
       const response = await useApi().post('/auth/login', { email, password })
-      if (response.token && response.user) {
+      console.log('Ответ сервера:', response)
+
+      if (response && response.success && response.token && response.user) {
+        console.log('Успешная авторизация')
         setToken(response.token)
         setUser(response.user)
+        return true
       } else {
-        throw new Error('Invalid response format')
+        console.error('Неверный формат ответа:', response)
+        throw new Error(response?.message || 'Неверный формат ответа')
       }
     } catch (err) {
+      console.error('Ошибка при входе:', err)
       const errorMessage = err instanceof Error ? err.message : 'Ошибка авторизации'
       error.value = errorMessage
-      throw err
+      throw new Error(errorMessage)
     } finally {
       loading.value = false
     }
@@ -79,7 +106,7 @@ export const useAuthStore = defineStore('auth', () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Ошибка при выходе'
       error.value = errorMessage
-      throw err
+      throw new Error(errorMessage)
     } finally {
       loading.value = false
     }

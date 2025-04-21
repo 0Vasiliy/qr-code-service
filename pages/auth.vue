@@ -79,7 +79,7 @@
         <div class="mt-6 text-center text-sm text-gray-500">
           <p>Тестовые учетные данные:</p>
           <p>Email: test@example.com</p>
-          <p>Пароль: password</p>
+          <p>Пароль: test123</p>
         </div>
       </div>
     </div>
@@ -100,11 +100,23 @@ const loading = computed(() => authStore.loading)
 const error = computed(() => authStore.error)
 
 const handleSubmit = async () => {
+  if (!authStore.login) {
+    console.error('Функция login не найдена в authStore')
+    return
+  }
+
   try {
-    await authStore.login(form.email, form.password)
-    navigateTo('/dashboard')
+    console.log('Начало процесса входа')
+    const success = await authStore.login(form.email, form.password)
+    console.log('Результат входа:', success)
+    
+    if (success) {
+      console.log('Перенаправление на dashboard')
+      await navigateTo('/dashboard')
+    }
   } catch (err) {
-    console.error('Auth error:', err)
+    console.error('Ошибка авторизации:', err)
+    form.password = ''
   }
 }
 </script>

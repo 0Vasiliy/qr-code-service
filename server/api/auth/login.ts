@@ -1,8 +1,9 @@
-import { defineEventHandler, readBody, setResponseHeaders, getMethod, setResponseStatus } from 'h3'
+import { defineEventHandler, readBody, setResponseHeaders, getMethod } from 'h3'
+import { createError } from 'h3'
 
 // Тестовые учетные данные
 const TEST_USER = {
-  id: 1,
+  id: '1',
   name: 'Test User',
   email: 'test@example.com',
   password: 'test123',
@@ -14,50 +15,56 @@ const TEST_USER = {
 
 export default defineEventHandler(async (event) => {
   try {
+    console.log('Получен запрос на авторизацию')
+    
     // Устанавливаем заголовки ответа
     setResponseHeaders(event, {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'"
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',
+      'Access-Control-Allow-Credentials': 'true'
     })
 
     const method = getMethod(event)
-    console.log('Login request method:', method)
+    console.log('Метод запроса:', method)
 
     // Обработка OPTIONS запроса
     if (method === 'OPTIONS') {
+      console.log('Обработка OPTIONS запроса')
       return { success: true }
     }
 
     // Проверяем метод запроса
     if (method !== 'POST') {
-      console.log('Method not allowed:', method)
-      setResponseStatus(event, 405)
-      return {
-        success: false,
-        error: 'Method not allowed',
-        method: method
-      }
+      console.error('Неподдерживаемый метод:', method)
+      throw createError({
+        statusCode: 405,
+        message: 'Метод не поддерживается'
+      })
     }
 
     const body = await readBody(event)
-    console.log('Login request body:', body)
-
+    console.log('Получены данные:', { email: body.email, password: body.password ? '***' : undefined })
     const { email, password } = body
 
     if (!email || !password) {
-      setResponseStatus(event, 400)
-      return {
-        success: false,
-        error: 'Email and password are required'
-      }
+      console.error('Отсутствуют обязательные поля')
+      throw createError({
+        statusCode: 400,
+        message: 'Email и пароль обязательны'
+      })
     }
 
     // Проверяем учетные данные
+    console.log('Проверка учетных данных:', {
+      receivedEmail: email,
+      expectedEmail: TEST_USER.email,
+      passwordMatch: password === TEST_USER.password
+    })
+
     if (email === TEST_USER.email && password === TEST_USER.password) {
-      setResponseStatus(event, 200)
+      console.log('Успешная авторизация для пользователя:', email)
       return {
         success: true,
         user: {
@@ -73,18 +80,19 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    setResponseStatus(event, 401)
-    return {
-      success: false,
-      error: 'Invalid email or password'
+    console.error('Неверные учетные данные для:', email)
+    throw createError({
+      statusCode: 401,
+      message: 'Неверный email или пароль'
+    })
+  } catch (error: any) {
+    console.error('Ошибка авторизации:', error)
+    if (error.statusCode) {
+      throw error
     }
-  } catch (error) {
-    console.error('Login error:', error)
-    setResponseStatus(event, 500)
-    return {
-      success: false,
-      error: 'Login failed',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }
+    throw createError({
+      statusCode: 500,
+      message: 'Ошибка сервера'
+    })
   }
 }) 
