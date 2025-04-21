@@ -14,16 +14,27 @@ export default defineNuxtConfig({
       serverDir: '.output/server',
       publicDir: '.output/public'
     },
+    preset: process.env.NODE_ENV === 'production' ? 'github-pages' : 'node-server',
+    prerender: {
+      routes: ['/', '/auth', '/dashboard']
+    },
     devProxy: {},
     devStorage: {},
-    preset: 'github-pages',
-    prerender: {
-      routes: ['/']
+    timing: false,
+    routeRules: {
+      '/api/**': {
+        cors: true,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        }
+      }
     }
   },
 
   i18n: {
-    baseURL: '/qr-code-service/', 
+    baseUrl: process.env.NODE_ENV === 'production' ? '/qr-code-service/' : '/',
     locales: [
       {
         code: 'ru',
@@ -56,15 +67,32 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { hid: 'description', name: 'description', content: 'Сервис для создания QR кодов' },
-        { 'http-equiv': 'Content-Security-Policy', content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'" }
+        { name: 'description', content: 'Сервис для создания QR кодов' },
+        { 
+          'http-equiv': 'Content-Security-Policy',
+          content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' http://localhost:3001;"
+        }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: process.env.NODE_ENV === 'production' ? '/qr-code-service/favicon.ico' : '/favicon.ico' }
       ]
     }
   },
   // target: 'static',
   ssr: true,
-  compatibilityDate: '2025-04-17'
+  compatibilityDate: '2025-04-17',
+  
+  // Отключаем кэширование в режиме разработки
+  devServer: {
+    watch: {
+      usePolling: true
+    }
+  },
+
+  // Настройки маршрутизации
+  router: {
+    options: {
+      strict: false
+    }
+  }
 })

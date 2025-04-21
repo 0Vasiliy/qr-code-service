@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody, setResponseHeaders, getMethod } from 'h3'
+import { defineEventHandler, readBody, setResponseHeaders, getMethod, setResponseStatus } from 'h3'
 
 // Тестовые учетные данные
 const TEST_USER = {
@@ -24,6 +24,7 @@ export default defineEventHandler(async (event) => {
     })
 
     const method = getMethod(event)
+    console.log('Login request method:', method)
 
     // Обработка OPTIONS запроса
     if (method === 'OPTIONS') {
@@ -32,26 +33,31 @@ export default defineEventHandler(async (event) => {
 
     // Проверяем метод запроса
     if (method !== 'POST') {
+      console.log('Method not allowed:', method)
+      setResponseStatus(event, 405)
       return {
         success: false,
         error: 'Method not allowed',
-        statusCode: 405
+        method: method
       }
     }
 
     const body = await readBody(event)
+    console.log('Login request body:', body)
+
     const { email, password } = body
 
     if (!email || !password) {
+      setResponseStatus(event, 400)
       return {
         success: false,
-        error: 'Email and password are required',
-        statusCode: 400
+        error: 'Email and password are required'
       }
     }
 
     // Проверяем учетные данные
     if (email === TEST_USER.email && password === TEST_USER.password) {
+      setResponseStatus(event, 200)
       return {
         success: true,
         user: {
@@ -67,18 +73,18 @@ export default defineEventHandler(async (event) => {
       }
     }
 
+    setResponseStatus(event, 401)
     return {
       success: false,
-      error: 'Invalid email or password',
-      statusCode: 401
+      error: 'Invalid email or password'
     }
   } catch (error) {
     console.error('Login error:', error)
+    setResponseStatus(event, 500)
     return {
       success: false,
       error: 'Login failed',
-      details: error instanceof Error ? error.message : 'Unknown error',
-      statusCode: 500
+      details: error instanceof Error ? error.message : 'Unknown error'
     }
   }
 }) 
