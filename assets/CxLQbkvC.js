@@ -1,1 +1,0 @@
-import{u as e}from"./D274bEns.js";import{S as h,n as u}from"./-ej9eCOV.js";const i=h(t=>{const a=e().checkAuth();if(!a&&t.path!=="/auth"&&t.path!=="/")return u("/auth");if(a&&t.path==="/auth")return u("/dashboard")});export{i as default};
