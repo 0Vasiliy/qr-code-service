@@ -7,12 +7,7 @@
             {{ $t('home.title') }}
           </h1>
           <div class="flex flex-wrap justify-center sm:justify-end gap-2 sm:gap-4 mt-0 sm:mt-0 md:mt-5">
-            <button 
-              @click="navigateTo('/auth')"
-              class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 transition-colors"
-            >
-              {{ $t('auth.login') }}
-            </button>
+          
             <button 
               @click="setLocale('ru')"
               :class="{ 'text-teal-600': locale === 'ru' }"

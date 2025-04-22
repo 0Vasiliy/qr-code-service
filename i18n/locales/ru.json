@@ -88,59 +88,5 @@
       "messageTooShort": "Сообщение должно содержать минимум 10 символов",
       "submitFailed": "Произошла ошибка при отправке сообщения. Пожалуйста, попробуйте позже."
     }
-  },
-  "auth": {
-    "login": "Войти",
-    "register": "Зарегистрироваться",
-    "logout": "Выйти",
-    "email": "Email",
-    "password": "Пароль",
-    "name": "Имя",
-    "confirmPassword": "Подтвердите пароль",
-    "alreadyHaveAccount": "Уже есть аккаунт?",
-    "noAccount": "Нет аккаунта?",
-    "forgotPassword": "Забыли пароль?",
-    "loading": "Загрузка...",
-    "back": "Назад",
-    "errors": {
-      "emailRequired": "Пожалуйста, введите email",
-      "emailInvalid": "Пожалуйста, введите корректный email",
-      "passwordRequired": "Пожалуйста, введите пароль",
-      "passwordMinLength": "Пароль должен содержать минимум 6 символов",
-      "nameRequired": "Пожалуйста, введите ваше имя",
-      "passwordsDontMatch": "Пароли не совпадают",
-      "loginFailed": "Неверный email или пароль",
-      "registerFailed": "Произошла ошибка при регистрации",
-      "logoutFailed": "Произошла ошибка при выходе из системы"
-    }
-  },
-  "dashboard": {
-    "title": "Личный кабинет",
-    "welcome": "Добро пожаловать",
-    "profile": "Профиль",
-    "settings": "Настройки",
-    "qrCodes": "Мои QR-коды",
-    "noQRCodes": "У вас пока нет QR-кодов",
-    "statistics": "Статистика",
-    "noStatistics": "Статистика пока недоступна",
-    "logout": "Выйти",
-    "emailVerified": "Email подтвержден",
-    "emailNotVerified": "Email не подтвержден",
-    "verifyEmail": "Подтвердить email",
-    "verificationSent": "Письмо с подтверждением отправлено",
-    "accountSettings": {
-      "title": "Настройки аккаунта",
-      "changePassword": "Изменить пароль",
-      "deleteAccount": "Удалить аккаунт",
-      "currentPassword": "Текущий пароль",
-      "newPassword": "Новый пароль",
-      "confirmNewPassword": "Подтвердите новый пароль"
-    },
-    "notifications": {
-      "title": "Уведомления",
-      "emailNotifications": "Email уведомления",
-      "qrCodeScans": "Уведомления о сканировании QR-кодов",
-      "securityAlerts": "Уведомления о безопасности"
-    }
   }
 } 

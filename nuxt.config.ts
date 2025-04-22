@@ -2,6 +2,7 @@ import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
+
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
@@ -9,35 +10,14 @@ export default defineNuxtConfig({
   ],
 
   nitro: {
+    preset: 'static',
     output: {
       dir: '.output',
-      serverDir: '.output/server',
       publicDir: '.output/public'
     },
-    preset: process.env.NODE_ENV === 'production' ? 'github-pages' : 'node-server',
     prerender: {
-      routes: ['/', '/auth', '/dashboard']
-    },
-    devProxy: {
-      '/api': {
-        target: 'http://localhost:3000/api',
-        changeOrigin: true,
-        prependPath: true,
-        ws: true
-      }
-    },
-    devStorage: {},
-    timing: false,
-    routeRules: {
-      '/api/**': {
-        cors: true,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept',
-          'Access-Control-Allow-Credentials': 'true'
-        }
-      }
+      routes: ['/', '/qr-generator'],
+      crawlLinks: true
     }
   },
 
@@ -69,7 +49,7 @@ export default defineNuxtConfig({
 
   app: {
     baseURL: process.env.NODE_ENV === 'production' ? '/qr-code-service/' : '/',
-    buildAssetsDir: '/_nuxt/',
+    buildAssetsDir: 'assets/',
     head: {
       title: 'QR Code Service',
       meta: [
@@ -78,48 +58,57 @@ export default defineNuxtConfig({
         { name: 'description', content: 'Сервис для создания QR кодов' },
         { 
           'http-equiv': 'Content-Security-Policy',
-          content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' http://localhost:3001;"
+          content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' http://localhost:3001 https:;"
         }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: process.env.NODE_ENV === 'production' ? '/qr-code-service/favicon.ico' : '/favicon.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
       ]
     }
   },
-  // target: 'static',
-  ssr: true,
-  compatibilityDate: '2025-04-17',
-  
-  // Отключаем кэширование в режиме разработки
-  devServer: {
-    watch: {
-      usePolling: true
-    }
-  },
 
-  // Настройки маршрутизации
-  router: {
-    options: {
-      strict: false
-    }
-  },
+  ssr: true,
 
   runtimeConfig: {
     public: {
       apiBase: process.env.NODE_ENV === 'development'
         ? 'http://localhost:3000/api'
-        : '/api'
+        : '/api',
+      baseURL: process.env.NODE_ENV === 'production' ? '/qr-code-service/' : '/',
+      imagesPath: process.env.NODE_ENV === 'production' ? '/qr-code-service/images/' : '/images/'
     }
   },
 
   vite: {
-    server: {
-      proxy: {
-        '/api': {
-          target: 'http://localhost:3000',
-          changeOrigin: true,
-          ws: true
+    build: {
+      rollupOptions: {
+        output: {
+          assetFileNames: (assetInfo) => {
+            if (assetInfo.name) {
+              if (/\.(gif|jpe?g|png|svg)$/.test(assetInfo.name)) {
+                return `images/[name][extname]`
+              }
+              if (/\.css$/.test(assetInfo.name)) {
+                return `css/[name][extname]`
+              }
+              if (/\.js$/.test(assetInfo.name)) {
+                return `js/[name][extname]`
+              }
+            }
+            return `assets/[name][extname]`
+          }
         }
+      }
+    }
+  },
+
+  compatibilityDate: '2025-04-22',
+
+  hooks: {
+    'nitro:config': (config) => {
+      if (config.prerender) {
+        config.prerender.routes = config.prerender.routes || []
+        config.prerender.routes.push('/en', '/en/qr-generator')
       }
     }
   }

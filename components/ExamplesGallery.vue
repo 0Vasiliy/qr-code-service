@@ -17,7 +17,7 @@
       <div class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         <div v-for="(example, index) in examples" :key="index" class="bg-white rounded-lg shadow-lg overflow-hidden">
           <div class="p-6">
-            <img :src="`/images/examples/${example.image}`" :alt="example.title" class="w-full h-auto" />
+            <img :src="`${config.public.imagesPath}examples/${example.image}`" :alt="example.title" class="w-full h-auto" />
             <h3 class="mt-4 text-xl font-semibold text-gray-900">{{ example.title }}</h3>
             <p class="mt-2 text-gray-500">{{ example.description }}</p>
           </div>
@@ -30,8 +30,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRuntimeConfig } from '#app'
 
 const { t } = useI18n()
+const config = useRuntimeConfig()
 
 const examples = computed(() => [
   {

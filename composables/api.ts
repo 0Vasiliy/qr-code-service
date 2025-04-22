@@ -1,5 +1,4 @@
 import { ref } from 'vue'
-import { useAuthStore } from '../stores/authStore'
 
 export const useApi = () => {
   const isDev = process.env.NODE_ENV === 'development'
@@ -7,44 +6,17 @@ export const useApi = () => {
     ? 'http://localhost:3000/api'
     : '/api'
 
-  const authStore = useAuthStore()
-  const token = ref(authStore.token)
-
   const headers = {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    ...(token.value ? { 'Authorization': `Bearer ${token.value}` } : {})
+    'Accept': 'application/json'
   }
 
   const post = async (endpoint: string, data: any) => {
     try {
       console.log('Отправка POST запроса:', {
         url: `${baseURL}${endpoint}`,
-        data: { ...data, password: data.password ? '***' : undefined }
+        data
       })
-
-      // В режиме разработки используем локальное хранилище
-      if (isDev && endpoint === '/auth/login') {
-        if (data.email === 'test@example.com' && data.password === 'test123') {
-          const mockResponse = {
-            success: true,
-            user: {
-              id: '1',
-              name: 'Test User',
-              email: 'test@example.com',
-              emailVerified: true,
-              role: 'user',
-              createdAt: new Date().toISOString(),
-              lastLogin: new Date().toISOString()
-            },
-            token: 'test-token-123'
-          }
-          console.log('Локальный ответ:', mockResponse)
-          return mockResponse
-        } else {
-          throw new Error('Неверный email или пароль')
-        }
-      }
 
       const response = await fetch(`${baseURL}${endpoint}`, {
         method: 'POST',
@@ -94,27 +66,15 @@ export const useApi = () => {
       const response = await fetch(`${baseURL}/qr/save`, {
         method: 'POST',
         headers,
-        body: JSON.stringify({
-          data,
-          userId: authStore.user?.id
-        }),
+        body: JSON.stringify(data),
         credentials: 'include'
       })
 
-      let responseData
-      try {
-        responseData = await response.json()
-      } catch (e) {
-        console.error('Ошибка при парсинге ответа:', e)
-        throw new Error('Ошибка при обработке ответа сервера')
-      }
-
       if (!response.ok) {
-        const errorMessage = responseData?.message || 'Ошибка при сохранении QR-кода'
-        throw new Error(errorMessage)
+        throw new Error('Ошибка при сохранении QR-кода')
       }
 
-      return responseData
+      return await response.json()
     } catch (error) {
       console.error('Ошибка при сохранении QR-кода:', error)
       throw error
@@ -124,26 +84,18 @@ export const useApi = () => {
   const getQRCodes = async () => {
     try {
       const response = await fetch(`${baseURL}/qr/list`, {
+        method: 'GET',
         headers,
         credentials: 'include'
       })
 
-      let responseData
-      try {
-        responseData = await response.json()
-      } catch (e) {
-        console.error('Ошибка при парсинге ответа:', e)
-        throw new Error('Ошибка при обработке ответа сервера')
-      }
-
       if (!response.ok) {
-        const errorMessage = responseData?.message || 'Ошибка при получении QR-кодов'
-        throw new Error(errorMessage)
+        throw new Error('Ошибка при получении списка QR-кодов')
       }
 
-      return responseData
+      return await response.json()
     } catch (error) {
-      console.error('Ошибка при получении QR-кодов:', error)
+      console.error('Ошибка при получении списка QR-кодов:', error)
       throw error
     }
   }

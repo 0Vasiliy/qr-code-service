@@ -28,7 +28,8 @@
       "png": "PNG",
       "svg": "SVG",
       "pdf": "PDF"
-    }
+    },
+    "back": "Back"
   },
   "examples": {
     "title": "QR Code Usage Examples",
@@ -86,58 +87,6 @@
       "messageRequired": "Please enter your message",
       "messageTooShort": "Message must be at least 10 characters long",
       "submitFailed": "An error occurred while submitting the message. Please try again later."
-    }
-  },
-  "auth": {
-    "login": "Login",
-    "register": "Register",
-    "logout": "Sign Out",
-    "email": "Email",
-    "password": "Password",
-    "name": "Name",
-    "confirmPassword": "Confirm Password",
-    "alreadyHaveAccount": "Already have an account? Login",
-    "noAccount": "Don't have an account? Register",
-    "forgotPassword": "Forgot your password?",
-    "loading": "Loading...",
-    "back": "Back",
-    "errors": {
-      "emailRequired": "Please enter your email",
-      "emailInvalid": "Please enter a valid email",
-      "passwordRequired": "Please enter your password",
-      "passwordMinLength": "Password must be at least 6 characters long",
-      "nameRequired": "Please enter your name",
-      "passwordsDontMatch": "Passwords don't match",
-      "loginFailed": "Invalid email or password",
-      "registerFailed": "An error occurred during registration",
-      "logoutFailed": "An error occurred while signing out"
-    }
-  },
-  "dashboard": {
-    "title": "Dashboard",
-    "welcome": "Welcome",
-    "profile": "Profile",
-    "settings": "Settings",
-    "qrCodes": "My QR Codes",
-    "statistics": "Statistics",
-    "logout": "Sign Out",
-    "emailVerified": "Email verified",
-    "emailNotVerified": "Email not verified",
-    "verifyEmail": "Verify email",
-    "verificationSent": "Verification email sent",
-    "accountSettings": {
-      "title": "Account Settings",
-      "changePassword": "Change Password",
-      "deleteAccount": "Delete Account",
-      "currentPassword": "Current Password",
-      "newPassword": "New Password",
-      "confirmNewPassword": "Confirm New Password"
-    },
-    "notifications": {
-      "title": "Notifications",
-      "emailNotifications": "Email Notifications",
-      "qrCodeScans": "QR Code Scan Notifications",
-      "securityAlerts": "Security Alerts"
     }
   }
 } 
